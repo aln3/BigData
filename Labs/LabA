@@ -1,0 +1,27 @@
+WorldBank
+
+YouTube
+
+Match (u:USER)-[:FOLLOWS]->(g:USER {name: "YouTube"})
+return u, g
+
+
+Match (u:USER {name: "G7"})-[p:FOLLOWS*]->(g:USER {name:"UN"})
+return min(size(p))
+
+
+Match (u:USER)-[:FOLLOWS]->(g:USER),(u:USER)-[:FOLLOWS]->(h:USER)
+Where g.name = "Greenpeace"
+AND h.name = "YouTube"
+return u,g,h
+
+
+MATCH (t:TWEET)
+WHERE t.msg CONTAINS 'Climate'
+RETURN t
+
+
+
+Moving file to directory
+
+mv accidents.csv vehicles.csv vehicle_type.csv /home/andy/.config/'Neo4j Desktop'/Application/neo4jDatabases/database-76875a9f-b8ae-470b-90ec-4e71da99d850/installation-3.5.14/import
