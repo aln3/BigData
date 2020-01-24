@@ -25,3 +25,5 @@ RETURN t
 Moving file to directory
 
 mv accidents.csv vehicles.csv vehicle_type.csv /home/andy/.config/'Neo4j Desktop'/Application/neo4jDatabases/database-76875a9f-b8ae-470b-90ec-4e71da99d850/installation-3.5.14/import
+
+cp -a /home/andy/Documents/GitRepos/BigData/Data/. /home/andy/.config/'Neo4j Desktop'/Application/neo4jDatabases/database-0971a7a6-b868-452a-ada5-bbba23b1e080/installation-3.5.14/import

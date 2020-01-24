@@ -1,0 +1,71 @@
+CREATE CONSTRAINT ON (m:Movie) ASSERT a.movieid IS UNIQUE;
+
+USING PERIODIC COMMIT
+LOAD CSV WITH HEADERS FROM "file:///movies.csv" AS row
+FIELDTERMINATOR ';'
+MERGE (m:Movie{movieid: row.movieid})
+ON CREATE SET m.movieid = toInteger(row.movieid)
+
+
+
+<------------------------------------------------------------>
+
+CREATE CONSTRAINT ON (g:Gender) ASSERT g.sex IS UNIQUE;
+
+LOAD CSV WITH HEADERS FROM "file:///actors.csv" AS row
+FIELDTERMINATOR ';'
+CREATE (a:Actor {actorid: row.actorid, name: row.name})
+Merge (g:Gender {sex: row.sex})
+CREATE (a)-[:HAS_GENDER]->(g)
+
+
+
+CREATE CONSTRAINT ON (y:Year) ASSERT y.year IS UNIQUE;
+
+
+USING PERIODIC COMMIT
+LOAD CSV WITH HEADERS FROM "file:///movies.csv" AS row
+FIELDTERMINATOR ';'
+Merge (m:Movie {movieid: row.movieid, title: row.title})
+Merge (y:Year {year: row.year})
+CREATE (m)-[:RELEASED]->(y)
+
+
+
+CREATE CONSTRAINT ON (w:Writer) ASSERT w.writerid IS UNIQUE;
+
+USING PERIODIC COMMIT
+LOAD CSV WITH HEADERS FROM "file:///writers.csv" AS row
+FIELDTERMINATOR ';'
+Merge (w:Writer {writerid: row.writerid, name: row.name})
+
+CREATE CONSTRAINT ON (d:Director) ASSERT d.directorid IS UNIQUE;
+
+USING PERIODIC COMMIT
+LOAD CSV WITH HEADERS FROM "file:///directors.csv" AS row
+FIELDTERMINATOR ';'
+Merge (d:Director {directorid: row.directorid, name: row.name, rate: row.rate, gross: row.gross, num:row.num})
+
+
+
+USING PERIODIC COMMIT
+LOAD CSV WITH HEADERS FROM "file:///moviestoactors.csv" AS row
+FIELDTERMINATOR ';'
+CREATE (a:Actor)-[:ACTED_IN:{as_character: row.as_character, leading: row.leading}]->(m:Movie)
+WHERE  row.movieid = m.movieid
+AND    row.actorid = a.actorid
+
+
+USING PERIODIC COMMIT
+LOAD CSV WITH HEADERS FROM "file:///moviestoactors.csv" AS row
+FIELDTERMINATOR ';'
+MATCH (a:Actor), (m:Movie)
+CREATE (a:Actor)-[:ACTED_IN:{as_character: row.as_character, leading: row.leading}]->(m:Movie)
+WHERE  row.movieid = m.movieid
+AND    row.actorid = a.actorid
+
+
+
+
+MATCH (n)
+DETACH DELETE n
