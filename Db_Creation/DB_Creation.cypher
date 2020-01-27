@@ -78,4 +78,7 @@ MATCH p=(a:Actors)-[:ACTED_IN]->(m:Movies)-[:BELONGS_TO]->(g:Genre)
 WHERE a.Name= "Peck, Gregory" 
 RETURN p
 
+
 call db.schema.visualization
+
+
