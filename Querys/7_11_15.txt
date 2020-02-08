@@ -1,0 +1,67 @@
+// F21BD CW1
+//
+//
+// Q7 Number of movies directed by ‘Spielberg’ 
+//
+MATCH (m:Movies)<-[:DIRECTED]-(d:Directors)
+WHERE d.Name contains "Spielberg"
+RETURN COUNT(m) AS "Num_of_movies_directed_by Spielberg"
+//
+//
+//
+//
+//
+//
+// Q11 Based ratings with 10,000 or more votes, 
+// what are the top 3 movie genres using the average rank per movie genre as the metric?
+//
+// not sure this is correct but hard to check
+//
+MATCH (r:Rating)<-[:HAS_BEEN_GIVEN]-(m:Movies)
+WITH m AS movies_over_tenk WHERE r.Votes > 10000
+MATCH (r:Rating)<-[:HAS_BEEN_GIVEN]-(movies_over_tenk)-[:BELONGS_TO]->(g:Genre)
+RETURN g, AVG(r.Rank) as avg_rank
+ORDER BY avg_rank DESC LIMIT 3
+//
+//
+//
+// Q15 How many movies have been written and directed by an actor/actress that they didn’t star in?
+// (i.e. the person who wrote and directed the movie is a film star but didn’t appear in the movie)
+//
+// bit of trouble with DISTINCT movies here
+//
+MATCH (w:Writers)-[:WROTE]->(m:Movies)<-[:DIRECTED]-(d:Directors)
+WITH d.Name AS person, m AS movs WHERE w.Name = d.Name 
+RETURN COUNT(movs)
+// = 1912
+// = 1684 RETURN COUNT (DISTINCT movs)
+//
+// How many have acted, written and directed
+//
+MATCH (w:Writers)-[:WROTE]->(m:Movies)<-[:DIRECTED]-(d:Directors)
+WITH d.Name AS person, m AS movs WHERE w.Name = d.Name 
+MATCH (movs)<-[:ACTED_IN]-(a:Actors)
+WHERE a.Name = person
+RETURN COUNT(movs)
+// = 364 
+// = 324 RETURN COUNT (DISTINCT movs)
+//
+//
+//  apparently <> is the operator for inequality
+// so how many have written, directed but not acted
+//
+MATCH (w:Writers)-[:WROTE]->(m:Movies)<-[:DIRECTED]-(d:Directors)
+WITH d.Name AS person, m AS movs WHERE w.Name = d.Name 
+MATCH (movs)<-[:ACTED_IN]-(a:Actors)
+WHERE a.Name <> person
+RETURN COUNT(movs)
+// =  69410 obv wrong, this should be 1912 - 364 = 1548 (or 1684 - 324 = 1360)
+//
+// Distinct??
+//
+MATCH (w:Writers)-[:WROTE]->(m:Movies)<-[:DIRECTED]-(d:Directors)
+WITH d.Name AS person, m AS movs WHERE w.Name = d.Name 
+MATCH (movs)<-[:ACTED_IN]-(a:Actors)
+WHERE a.Name <> person
+RETURN COUNT(DISTINCT movs)
+// =  1678   this is not 1548, so not entirely sure ?????
