@@ -1,0 +1,8 @@
+MATCH (w:Writers)-[:WROTE]->(m:Movies)<-[:DIRECTED]-(d:Directors)
+where d.Name = w.Name
+with m,d 
+match (a:Actors) where a.Name = d.Name
+with a,m
+match (m)
+where not (m)<-[:ACTED_IN]-(a)
+return count(distinct m)
