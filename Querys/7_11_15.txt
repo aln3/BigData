@@ -5,7 +5,7 @@
 //
 MATCH (m:Movies)<-[:DIRECTED]-(d:Directors)
 WHERE d.Name contains "Spielberg"
-RETURN COUNT(m) AS "Num_of_movies_directed_by Spielberg"
+RETURN COUNT(m) AS Num_of_movies_directed_by_Spielberg
 //
 //
 //
