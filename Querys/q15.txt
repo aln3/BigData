@@ -1,3 +1,6 @@
+//How many movies have been written and directed by an actor/actress that
+//they didn’t star in? 
+
 MATCH (w:Writers)-[:WROTE]->(m:Movies)<-[:DIRECTED]-(d:Directors)
 where d.Name = w.Name
 with m,d 
@@ -5,4 +8,7 @@ match (a:Actors) where a.Name = d.Name
 with a,m
 match (m)
 where not (m)<-[:ACTED_IN]-(a)
-return count(distinct m)
+return count(distinct m) as Number_of_movies
+
+
+//437
